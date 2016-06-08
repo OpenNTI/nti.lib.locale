@@ -9,7 +9,8 @@
   "scripts": {
     "test": "karma start --single-run --reporters dots,html,junit,coverage",
     "start": "make check",
-    "prepublish": "not-in-install && make || in-install"
+    "prepublish": "not-in-install && make || in-install",
+    "postversion": "git push && git push --tags && npm publish"
   },
   "repository": {
     "type": "git",
