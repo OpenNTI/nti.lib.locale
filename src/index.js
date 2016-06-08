@@ -1,5 +1,7 @@
 import counterpart from 'counterpart';
 
+const get = (path, o) => path.split('.').reduce((a, p) => a && a[p], o);
+
 export function getLocale () {
 	return counterpart.getLocale();
 }
@@ -13,8 +15,11 @@ export default function translate (...args) {
 	return counterpart(...args);
 }
 
-export function scoped (scope) {
-	return (key, options) => counterpart(key, Object.assign(options || {}, {scope}));
+export function scoped (scope, fallbacks) {
+	return (key, options = {}) => {
+		const {fallback = get(key, fallbacks)} = options;
+		return counterpart(key, {...options, fallback, scope});
+	};
 }
 
 export function addChangeListener (fn) {
