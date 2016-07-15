@@ -15,11 +15,21 @@ export default function translate (...args) {
 	return counterpart(...args);
 }
 
+function isMissing (str) {
+	return /^missing/i.test(str);
+}
+
+translate.isMissing = (...args) => isMissing(translate(...args));
+
 export function scoped (scope, fallbacks) {
-	return (key, options = {}) => {
+	function scopedTranslate (key, options = {}) {
 		const {fallback = get(key, fallbacks)} = options;
 		return counterpart(key, {...options, fallback, scope});
-	};
+	}
+
+	scopedTranslate.isMissing = (...args) => isMissing(scopedTranslate(...args));
+
+	return scopedTranslate;
 }
 
 export function addChangeListener (fn) {
