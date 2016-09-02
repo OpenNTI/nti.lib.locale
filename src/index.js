@@ -39,3 +39,21 @@ export function addChangeListener (fn) {
 export function removeChangeListener (fn) {
 	counterpart.offLocaleChange(fn);
 }
+
+
+export function init () {
+	const locale = getLocale();
+
+	fetch(`/site-assets/shared/strings.${locale}.json`)
+		.then(res => res.ok
+				? res.json()
+				: Promise.reject(res.status === 404 ? null : res.statusText)
+		)
+		.then(translation => registerTranslations(locale, translation))
+		.catch(er => er && console.error(er.stack || er.message || er)); //eslint-disable-line
+}
+
+
+if (process.env.NODE_ENV !== 'test') {
+	setTimeout(init, 1);//separate frame
+}
