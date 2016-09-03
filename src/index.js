@@ -54,6 +54,6 @@ export function init () {
 }
 
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test' && typeof window !== 'undefined') {
 	setTimeout(init, 1);//separate frame
 }
