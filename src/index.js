@@ -43,7 +43,7 @@ export function removeChangeListener (fn) {
 
 export function init () {
 	const locale = getLocale();
-
+	//This assumes browser context... site/lang specific strings will not work on node (for server side renders) this way.
 	fetch(`/site-assets/shared/strings.${locale}.json`)
 		.then(res => res.ok
 				? res.json()
@@ -53,7 +53,7 @@ export function init () {
 		.catch(er => er && console.error(er.stack || er.message || er)); //eslint-disable-line
 }
 
-
+//Ug... magical init on import is kind of bad. The client of this module should call init directly.
 if (process.env.NODE_ENV !== 'test' && typeof window !== 'undefined') {
 	setTimeout(init, 1);//separate frame
 }
