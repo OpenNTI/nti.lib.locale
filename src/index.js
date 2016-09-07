@@ -52,8 +52,3 @@ export function init () {
 		.then(translation => registerTranslations(locale, translation))
 		.catch(er => er && console.error(er.stack || er.message || er)); //eslint-disable-line
 }
-
-//Ug... magical init on import is kind of bad. The client of this module should call init directly.
-if (process.env.NODE_ENV !== 'test' && typeof window !== 'undefined') {
-	setTimeout(init, 1);//separate frame
-}
