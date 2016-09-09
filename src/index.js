@@ -19,7 +19,32 @@ function isMissing (str) {
 	return /^missing/i.test(str);
 }
 
+/**
+ * Given two scoped fns if it doesn't exist in t2, check t1.
+ * @param  {Function} t1 the scoped fn to be overridden
+ * @param  {Function} t2 the scoped fn to override with
+ * @return {Function}    fn to get a string
+ */
+function override (t1, t2) {
+	return (key, options = {}) => {
+		const missing1 = t1.isMissing(key);
+		const missing2 = t2.isMissing(key);
+		let value;
+
+		if (missing1 && missing2) {
+			value = `${t1(key, options)}, ${t2(key, options)} `;
+		} else if (missing2) {
+			value = t1(key, options);
+		} else {
+			value = t2(key, options);
+		}
+
+		return value;
+	};
+}
+
 translate.isMissing = (...args) => isMissing(translate(...args));
+translate.override = (...args) => override(...args);
 
 export function scoped (scope, fallbacks) {
 	function scopedTranslate (key, options = {}) {
@@ -28,9 +53,11 @@ export function scoped (scope, fallbacks) {
 	}
 
 	scopedTranslate.isMissing = (...args) => isMissing(scopedTranslate(...args));
+	scopedTranslate.override = t2 => override(scopedTranslate, t2);
 
 	return scopedTranslate;
 }
+
 
 export function addChangeListener (fn) {
 	counterpart.onLocaleChange(fn);

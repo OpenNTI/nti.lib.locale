@@ -50,4 +50,57 @@ describe('Locale Tests', ()=> {
 		const t = scoped('scope', {baz: {foodoo: 'bar'}});
 		expect(t('does.not.exist')).toEqual('missing translation: en.scope.does.not.exist');
 	});
+
+	describe('Overriding Tests', () => {
+		let t, base, override;
+		const baseOnly = 'base only';
+		const overrideOnly = 'override only';
+		const topLevel = 'top level';
+		const nested = 'nested value';
+
+		beforeEach(() => {
+			base = scoped('override-test-base-scope', {
+				baseOnly: baseOnly,
+				topLevel: `${topLevel} base`,
+				nested: {
+					value: `${nested} base`
+				}
+			});
+
+			override = scoped('override-test-override-scope', {
+				overrideOnly: overrideOnly,
+				topLevel: topLevel,
+				nested: {
+					value: nested
+				}
+			});
+
+			t = base.override(override);
+		});
+
+
+		it('Gets string only in base', () => {
+			const s = t('baseOnly');
+
+			expect(s).toEqual(baseOnly);
+		});
+
+		it('Gets string only in override', () => {
+			const s = t('overrideOnly');
+
+			expect(s).toEqual(overrideOnly);
+		});
+
+		it('Gets top level string from override that is in both', () => {
+			const s = t('topLevel');
+
+			expect(s).toEqual(topLevel);
+		});
+
+		it('Gets nested string from override that is in both', () => {
+			const s = t('nested.value');
+
+			expect(s).toEqual(nested);
+		});
+	});
 });
