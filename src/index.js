@@ -26,7 +26,7 @@ function isMissing (str) {
  * @return {Function}    fn to get a string
  */
 function override (t1, t2) {
-	return (key, options = {}) => {
+	const overrideTranslate = (key, options = {}) => {
 		const missing1 = t1.isMissing(key);
 		const missing2 = t2.isMissing(key);
 		let value;
@@ -41,6 +41,11 @@ function override (t1, t2) {
 
 		return value;
 	};
+
+	overrideTranslate.isMissing = (...args) => t1.isMissing(...args) && t2.isMissing(...args);
+	overrideTranslate.override = t3 => override(overrideTranslate, t3);
+
+	return overrideTranslate;
 }
 
 translate.isMissing = (...args) => isMissing(translate(...args));

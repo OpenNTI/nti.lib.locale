@@ -58,6 +58,7 @@ describe('Locale Tests', ()=> {
 		const topLevel = 'top level';
 		const nested = 'nested value';
 
+
 		beforeEach(() => {
 			base = scoped('override-test-base-scope', {
 				baseOnly: baseOnly,
@@ -101,6 +102,55 @@ describe('Locale Tests', ()=> {
 			const s = t('nested.value');
 
 			expect(s).toEqual(nested);
+		});
+
+		describe('Overrides are chainable', () => {
+			let chained, third;
+			const thirdOnly = 'thirdLevelOnly';
+			const topLevelThird = 'top level third';
+			const nestedThird = 'nested third value';
+
+			beforeEach(() => {
+				third = scoped('override-test-third-scope', {
+					thirdOnly: thirdOnly,
+					topLevel: topLevelThird,
+					nested: {
+						value: nestedThird
+					}
+				});
+
+				chained = t.override(third);
+			});
+
+			it('Gets string only in base', () => {
+				const s = chained('baseOnly');
+
+				expect(s).toEqual(baseOnly);
+			});
+
+			it('Gets string only in override', () => {
+				const s = chained('overrideOnly');
+
+				expect(s).toEqual(overrideOnly);
+			});
+
+			it('Gets string only in third', () => {
+				const s = chained('thirdOnly');
+
+				expect(s).toEqual(thirdOnly);
+			});
+
+			it('Gets top level string from chained that is in all three', () => {
+				const s = chained('topLevel');
+
+				expect(s).toEqual(topLevelThird);
+			});
+
+			it('Gets nested string from chained that is in all three', () => {
+				const s = chained('nested.value');
+
+				expect(s).toEqual(nestedThird);
+			});
 		});
 	});
 });
