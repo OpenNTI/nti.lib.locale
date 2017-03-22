@@ -11,6 +11,26 @@ describe('Locale Tests', ()=> {
 
 	const locale = getLocale();
 
+	describe('Values from web-service', () => {
+		let oldAppConfig;
+		beforeEach(() => {
+			oldAppConfig = global.$AppConfig;
+			global.$AppConfig = {...(oldAppConfig || {})};
+		});
+
+		afterEach(() => {
+			global.$AppConfig = oldAppConfig;
+			if (global.$AppConfig == null) {
+				delete global.$AppConfig;
+			}
+		});
+
+		it('uses directed locale from web-service', () => {
+			global.$AppConfig.locale = 'ru';
+			expect(getLocale()).toBe('ru');
+		});
+	});
+
 	it('fires locale change event', (done) => {
 
 		function onChange () {

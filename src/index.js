@@ -1,9 +1,12 @@
+/*global $AppConfig*/
 import counterpart from 'counterpart';
 
 const get = (path, o) => path.split('.').reduce((a, p) => a && a[p], o);
 
 export function getLocale () {
-	return counterpart.getLocale();
+	return (typeof $AppConfig !== 'undefined' && $AppConfig.locale)
+		? $AppConfig.locale //Apps served by web-service will have a locale set on the embedded config
+		: counterpart.getLocale();
 }
 
 export function registerTranslations (locale, data) {
