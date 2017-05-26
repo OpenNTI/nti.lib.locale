@@ -54,7 +54,39 @@ function override (t1, t2) {
 translate.isMissing = (...args) => isMissing(translate(...args));
 translate.override = (...args) => override(...args);
 
+
+
+/**
+ * Return a scoped translate function.
+ * @param  {String} scope     The key prefix. Should be a JSON dotted path.
+ *                            eg: `<package-name>.component.organization.ComponentName`
+ *                            ex: `nti-content.editor.block-types.course-figure.Editor`
+ *
+ *                            When we define other languages to fillin the text (instead of the defaults) we will have
+ *                            a large json file with keys:
+ *                            ```
+ *                            {
+ *                                "webapp": {...},
+ *                                "mobile": {...},
+ *                                "nti-web-commons: { ... },
+ *                                "nti-content": {
+ *                                    "block-types": {
+ *                                        "course-figure": {
+ *                                            "Editor": { "figureTitle": "Figure %(index)s", ... }
+ *                                        }
+ *                                    }
+ *                                }
+ *                            }
+ *                            ```
+ * @param  {Object} fallbacks An object with default values for keys. The will only be used
+ *                            if there is no key in the selected locale.
+ * @return {function}           a translate function scoped to the given scope path.
+ */
 export function scoped (scope, fallbacks) {
+	if (!scope || scope.indexOf('.') < 0) {
+		console.error('"%s" is a bad locale scope ("key" path prefix).');
+	}
+
 	function scopedTranslate (key, options = {}) {
 		const {fallback = get(key, fallbacks)} = options;
 		return counterpart(key, {...options, fallback, scope});
