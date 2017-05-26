@@ -84,6 +84,7 @@ translate.override = (...args) => override(...args);
  */
 export function scoped (scope, fallbacks) {
 	if (!scope || scope.indexOf('.') < 0) {
+		//eslint-disable-next-line no-console
 		console.error('"%s" is a bad locale scope ("key" path prefix).');
 	}
 
