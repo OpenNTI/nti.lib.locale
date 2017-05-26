@@ -9,7 +9,7 @@
   "scripts": {
     "test": "make test",
     "start": "make check",
-    "prepublish": "not-in-install && make || in-install",
+    "prepack": "make",
     "postversion": "git push && git push --tags && npm publish"
   },
   "repository": {
@@ -33,7 +33,6 @@
     "babel-preset-env": "^1.0.0",
     "babel-preset-stage-2": "^6.1.0",
     "eslint-config-nti-codestyle-js": "^1.1.0",
-    "in-publish": "^2.0.0",
     "jest": "^20.0.0",
     "jest-junit": "^1.4.0"
   },
