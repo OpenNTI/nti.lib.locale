@@ -45,30 +45,30 @@ describe('Locale Tests', ()=> {
 
 
 	it ('scoped', () => {
-		registerTranslations(locale, {'scope': { 'foo': 'baz'}});
-		const t = scoped('scope');
+		registerTranslations(locale, {'nti-lib-locale': {test: {scope: { 'foo': 'baz'}}}});
+		const t = scoped('nti-lib-locale.test.scope');
 		expect(t('foo')).toBe('baz');
 		expect(translate('foo')).toBe('bar');
 	});
 
 	it ('scoped with fallback', () => {
-		const t = scoped('scope', {baz: {foodoo: 'bar'}});
+		const t = scoped('nti-lib-locale.test.scope', {baz: {foodoo: 'bar'}});
 		expect(t('baz.foodoo')).toBe('bar');
 	});
 
 	it ('defining fallbacks does not override local options', () => {
-		const t = scoped('scope', {baz: {foodoo: 'bar'}});
+		const t = scoped('nti-lib-locale.test.scope', {baz: {foodoo: 'bar'}});
 		expect(t('baz.foodoo',{fallback: 'dude!'})).toBe('dude!');
 	});
 
 	it ('fallbacks does not introduce exceptions', () => {
-		const t = scoped('scope', {baz: {foodoo: 'bar'}});
+		const t = scoped('nti-lib-locale.test.scope', {baz: {foodoo: 'bar'}});
 		expect(()=> t('does.not.exist')).not.toThrow();
 	});
 
 	it ('normal placeholder text still returns', () => {
-		const t = scoped('scope', {baz: {foodoo: 'bar'}});
-		expect(t('does.not.exist')).toEqual('missing translation: en.scope.does.not.exist');
+		const t = scoped('nti-lib-locale.test.scope', {baz: {foodoo: 'bar'}});
+		expect(t('does.not.exist')).toEqual('missing translation: en.nti-lib-locale.test.scope.does.not.exist');
 	});
 
 	describe('Overriding Tests', () => {
@@ -80,7 +80,7 @@ describe('Locale Tests', ()=> {
 
 
 		beforeEach(() => {
-			base = scoped('override-test-base-scope', {
+			base = scoped('nti-lib-locale.tests.override.base.scope', {
 				baseOnly: baseOnly,
 				topLevel: `${topLevel} base`,
 				nested: {
@@ -88,7 +88,7 @@ describe('Locale Tests', ()=> {
 				}
 			});
 
-			override = scoped('override-test-override-scope', {
+			override = scoped('nti-lib-locale.tests.override.override.scope', {
 				overrideOnly: overrideOnly,
 				topLevel: topLevel,
 				nested: {
@@ -131,7 +131,7 @@ describe('Locale Tests', ()=> {
 			const nestedThird = 'nested third value';
 
 			beforeEach(() => {
-				third = scoped('override-test-third-scope', {
+				third = scoped('nti-lib-locale.tests.override.third.scope', {
 					thirdOnly: thirdOnly,
 					topLevel: topLevelThird,
 					nested: {
