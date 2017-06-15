@@ -1,4 +1,4 @@
-/*global $AppConfig*/
+/*global $AppConfig, fetch*/
 import counterpart from 'counterpart';
 
 const get = (path, o) => path.split('.').reduce((a, p) => a && a[p], o);

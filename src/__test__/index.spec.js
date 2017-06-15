@@ -1,3 +1,4 @@
+/* eslint-env jest */
 import translate, {
 	addChangeListener,
 	removeChangeListener,
@@ -7,11 +8,11 @@ import translate, {
 } from '../index';
 
 
-describe('Locale Tests', ()=> {
+describe ('Locale Tests', ()=> {
 
 	const locale = getLocale();
 
-	describe('Values from web-service', () => {
+	describe ('Values from web-service', () => {
 		let oldAppConfig;
 		beforeEach(() => {
 			oldAppConfig = global.$AppConfig;
@@ -25,13 +26,13 @@ describe('Locale Tests', ()=> {
 			}
 		});
 
-		it('uses directed locale from web-service', () => {
+		test ('uses directed locale from web-service', () => {
 			global.$AppConfig.locale = 'ru';
 			expect(getLocale()).toBe('ru');
 		});
 	});
 
-	it('fires locale change event', (done) => {
+	test ('fires locale change event', (done) => {
 
 		function onChange () {
 			removeChangeListener(onChange);
@@ -44,34 +45,34 @@ describe('Locale Tests', ()=> {
 	});
 
 
-	it ('scoped', () => {
+	test ('scoped', () => {
 		registerTranslations(locale, {'nti-lib-locale': {test: {scope: { 'foo': 'baz'}}}});
 		const t = scoped('nti-lib-locale.test.scope');
 		expect(t('foo')).toBe('baz');
 		expect(translate('foo')).toBe('bar');
 	});
 
-	it ('scoped with fallback', () => {
+	test ('scoped with fallback', () => {
 		const t = scoped('nti-lib-locale.test.scope', {baz: {foodoo: 'bar'}});
 		expect(t('baz.foodoo')).toBe('bar');
 	});
 
-	it ('defining fallbacks does not override local options', () => {
+	test ('defining fallbacks does not override local options', () => {
 		const t = scoped('nti-lib-locale.test.scope', {baz: {foodoo: 'bar'}});
 		expect(t('baz.foodoo',{fallback: 'dude!'})).toBe('dude!');
 	});
 
-	it ('fallbacks does not introduce exceptions', () => {
+	test ('fallbacks does not introduce exceptions', () => {
 		const t = scoped('nti-lib-locale.test.scope', {baz: {foodoo: 'bar'}});
 		expect(()=> t('does.not.exist')).not.toThrow();
 	});
 
-	it ('normal placeholder text still returns', () => {
+	test ('normal placeholder text still returns', () => {
 		const t = scoped('nti-lib-locale.test.scope', {baz: {foodoo: 'bar'}});
 		expect(t('does.not.exist')).toEqual('missing translation: en.nti-lib-locale.test.scope.does.not.exist');
 	});
 
-	describe('Overriding Tests', () => {
+	describe ('Overriding Tests', () => {
 		let t, base, override;
 		const baseOnly = 'base only';
 		const overrideOnly = 'override only';
@@ -100,31 +101,31 @@ describe('Locale Tests', ()=> {
 		});
 
 
-		it('Gets string only in base', () => {
+		test ('Gets string only in base', () => {
 			const s = t('baseOnly');
 
 			expect(s).toEqual(baseOnly);
 		});
 
-		it('Gets string only in override', () => {
+		test ('Gets string only in override', () => {
 			const s = t('overrideOnly');
 
 			expect(s).toEqual(overrideOnly);
 		});
 
-		it('Gets top level string from override that is in both', () => {
+		test ('Gets top level string from override that is in both', () => {
 			const s = t('topLevel');
 
 			expect(s).toEqual(topLevel);
 		});
 
-		it('Gets nested string from override that is in both', () => {
+		test ('Gets nested string from override that is in both', () => {
 			const s = t('nested.value');
 
 			expect(s).toEqual(nested);
 		});
 
-		describe('Overrides are chainable', () => {
+		describe ('Overrides are chainable', () => {
 			let chained, third;
 			const thirdOnly = 'thirdLevelOnly';
 			const topLevelThird = 'top level third';
@@ -142,31 +143,31 @@ describe('Locale Tests', ()=> {
 				chained = t.override(third);
 			});
 
-			it('Gets string only in base', () => {
+			test ('Gets string only in base', () => {
 				const s = chained('baseOnly');
 
 				expect(s).toEqual(baseOnly);
 			});
 
-			it('Gets string only in override', () => {
+			test ('Gets string only in override', () => {
 				const s = chained('overrideOnly');
 
 				expect(s).toEqual(overrideOnly);
 			});
 
-			it('Gets string only in third', () => {
+			test ('Gets string only in third', () => {
 				const s = chained('thirdOnly');
 
 				expect(s).toEqual(thirdOnly);
 			});
 
-			it('Gets top level string from chained that is in all three', () => {
+			test ('Gets top level string from chained that is in all three', () => {
 				const s = chained('topLevel');
 
 				expect(s).toEqual(topLevelThird);
 			});
 
-			it('Gets nested string from chained that is in all three', () => {
+			test ('Gets nested string from chained that is in all three', () => {
 				const s = chained('nested.value');
 
 				expect(s).toEqual(nestedThird);
