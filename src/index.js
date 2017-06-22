@@ -114,8 +114,8 @@ export function init () {
 	//This assumes browser context... site/lang specific strings will not work on node (for server side renders) this way.
 	fetch(`/site-assets/shared/strings.${locale}.json`)
 		.then(res => res.ok
-				? res.json()
-				: Promise.reject(res.status === 404 ? null : res.statusText)
+			? res.json()
+			: Promise.reject(res.status === 404 ? null : res.statusText)
 		)
 		.then(translation => registerTranslations(locale, translation))
 		.catch(er => er && console.error(er.stack || er.message || er)); //eslint-disable-line
