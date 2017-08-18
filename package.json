@@ -30,6 +30,6 @@
   },
   "devDependencies": {
     "babel-preset-stage-2": "^6.1.0",
-    "nti-lib-scripts": "^1.0.34"
+    "nti-lib-scripts": "^1.0.36"
   }
 }
