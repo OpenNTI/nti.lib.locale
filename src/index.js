@@ -89,8 +89,11 @@ export function scoped (scope, fallbacks) {
 	}
 
 	function scopedTranslate (key, options = {}) {
-		const {fallback = get(key, fallbacks)} = options;
-		return counterpart(key, {...options, fallback, scope});
+		return counterpart(key, {
+			...options,
+			fallback: get(key, fallbacks) || options.fallback,
+			scope
+		});
 	}
 
 	scopedTranslate.isMissing = (...args) => isMissing(scopedTranslate(...args));

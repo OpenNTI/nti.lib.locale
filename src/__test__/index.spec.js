@@ -59,7 +59,9 @@ describe ('Locale Tests', ()=> {
 
 	test ('defining fallbacks does not override local options', () => {
 		const t = scoped('nti-lib-locale.test.scope', {baz: {foodoo: 'bar'}});
-		expect(t('baz.foodoo',{fallback: 'dude!'})).toBe('dude!');
+
+		expect(t('baz.foodoo',{fallback: 'dude!'})).toBe('bar');
+		expect(t('baz.foodoo2',{fallback: 'dude!'})).toBe('dude!');
 	});
 
 	test ('fallbacks does not introduce exceptions', () => {
