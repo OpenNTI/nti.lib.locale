@@ -18,8 +18,43 @@
  */
 import counterpart from 'counterpart';
 
-const get = (path, o) => path.split('.').reduce((a, p) => a && a[p], o);
 const isMissingValue = (str) => /^missing/i.test(str);
+const isSimpleObject = o => o && (p => p === null || p === Object.prototype)(Object.getPrototypeOf(o));
+
+function flatten (o, prefix) {
+	const out = Object.create(null);
+	const getKey = (k) => prefix ? `${prefix}.${k}` : k;
+
+	for (let [key, value] of Object.entries(o)) {
+		const k = getKey(key);
+		out[k] = value;
+
+		if (isSimpleObject(value)) {
+			delete out[k];
+			Object.assign(out, flatten(value, k));
+		}
+	}
+
+	return out;
+}
+
+function traverse (path, root, sep = '.') {
+	let key, o = root;
+	path = path.split(sep).reverse();
+	do {
+		o = !key ? o : (o[key] || (o[key] = Object.create(null)));
+		key = path.pop();
+	} while(path.length > 0);
+	return [o, key];
+}
+
+function gen (path, value) {
+	const o = {};
+	const [bin, key] = traverse(path, o);
+	bin[key] = value;
+	return o;
+}
+
 
 
 /**
@@ -107,7 +142,12 @@ export function override (t1, t2) {
  * @return {boolean}     Returns the true if the key is missing.
  */
 export function isMissing (key) {
-	return isMissingValue(translate(key, {}));
+	try {
+		return isMissingValue(translate(key, {}));
+	} catch (e) {
+		//translate only throws when the string contains interpolations, which tells us its not missing.
+		return false;
+	}
 }
 
 
@@ -138,12 +178,12 @@ export function isMissing (key) {
  *     }
  * }
  * ```
- * @param  {Object} fallbacks An object with default values for keys. The will only be used
+ * @param  {Object} defaults  An object with default values for keys. The will only be used
  *                            if there is no key in the selected locale.
  * @return {function}         a translate function scoped to the given path. The function also has two inner functions
  * attached to it: `fn.isMissing(key) -> boolean` and `fn.override(withFn) -> fn`
  */
-export function scoped (scope, fallbacks) {
+export function scoped (scope, defaults) {
 	if (!scope || scope.indexOf('.') < 0) {
 		//eslint-disable-next-line no-console
 		console.error('"%s" is a bad locale scope ("key" path prefix).', scope);
@@ -152,12 +192,20 @@ export function scoped (scope, fallbacks) {
 	const scopedTranslate = (key, options = {}) =>
 		counterpart(key, {
 			...options,
-			fallback: get(key, fallbacks) || options.fallback,
 			scope
 		});
 
-	scopedTranslate.isMissing = (key) => isMissingValue(scopedTranslate(key));
+	scopedTranslate.isMissing = (key) => isMissing(scope + '.' + key);
 	scopedTranslate.override = t2 => override(scopedTranslate, t2);
+
+
+	if (typeof defaults === 'object') {
+		for(let [key, value] of Object.entries(flatten(defaults, scope))) {
+			if (isMissing(key)) {
+				registerTranslations(getLocale(), gen(key, value));
+			}
+		}
+	}
 
 	return scopedTranslate;
 }
@@ -193,6 +241,9 @@ export function removeChangeListener (fn) {
  */
 export function init () {
 	const locale = getLocale();
+
+	global.__getLocalData = () => counterpart._registry;
+
 	//This assumes browser context... site/lang specific strings will not work on node (for server side renders) this way.
 	fetch(`/site-assets/shared/strings.${locale}.json`)
 		.then(res => res.ok
