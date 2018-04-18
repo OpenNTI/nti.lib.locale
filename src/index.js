@@ -2,7 +2,7 @@
 /**
  * Usage:
  * ```js
- * import getString, {scoped} from 'nti-lib-locale';
+ * import getString, {scoped} from '@nti/lib-locale';
  *
  * const DEFAULT_TEXT = {
  *  link1: 'hello'
@@ -14,7 +14,7 @@
  * const link1 = getStringScoped('link1');
  * ```
  * The signature of getString is the same as that of [counterpart]{@link https://www.npmjs.com/package/counterpart}'s translate function.
- * @module nti-lib-locale
+ * @module @nti/lib-locale
  */
 import counterpart from 'counterpart';
 
