@@ -1,6 +1,6 @@
 {
   "name": "@nti/lib-locale",
-  "version": "1.3.0",
+  "version": "1.4.0-alpha",
   "description": "NTI Localization (Strings)",
   "main": "lib/index.js",
   "files": [
