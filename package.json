@@ -20,6 +20,9 @@
     "type": "git",
     "url": "https://github.com/NextThought/nti.lib.locale.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.nextthought.com"
+  },
   "keywords": [
     "ntiids"
   ],
