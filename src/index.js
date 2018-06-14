@@ -245,7 +245,7 @@ export function init () {
 	global.__getLocalData = () => counterpart._registry;
 
 	//This assumes browser context... site/lang specific strings will not work on node (for server side renders) this way.
-	fetch(`/site-assets/shared/strings.${locale}.json`)
+	return fetch(`/site-assets/shared/strings.${locale}.json`)
 		.then(res => res.ok
 			? res.json()
 			: Promise.reject(res.status === 404 ? null : res.statusText)
