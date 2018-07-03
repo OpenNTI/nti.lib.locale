@@ -29,7 +29,7 @@
   "author": "nextthought",
   "license": "UNLICENSED",
   "dependencies": {
-    "counterpart": "^0.17.0"
+    "counterpart": "^0.18.6"
   },
   "devDependencies": {
     "babel-preset-stage-2": "^6.1.0",
