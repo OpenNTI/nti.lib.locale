@@ -4,7 +4,8 @@ import translate, {
 	removeChangeListener,
 	registerTranslations,
 	scoped,
-	getLocale
+	getLocale,
+	getLocalizedCurrencyString
 } from '../index';
 
 
@@ -175,5 +176,13 @@ describe ('Locale Tests', ()=> {
 				expect(s).toEqual(nestedThird);
 			});
 		});
+	});
+
+	test ('currency localizer', () => {
+		expect(getLocalizedCurrencyString()).toBe(null);
+		expect(getLocalizedCurrencyString(555)).toBe('555');
+		expect(getLocalizedCurrencyString(123, 'USD')).not.toBe(null);
+		expect(getLocalizedCurrencyString(123, 'USD', 'en-us')).toEqual('$123');
+		expect(getLocalizedCurrencyString(1234, 'GBP', 'de-DE')).toEqual('£ 1,234');
 	});
 });
