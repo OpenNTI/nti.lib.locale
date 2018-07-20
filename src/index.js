@@ -233,6 +233,30 @@ export function removeChangeListener (fn) {
 }
 
 
+/**
+ * Localizes a monetary amount into a string "$123", "123 $", etc
+ *
+ * @param  {number}  amount    Amount or price value
+ * @param  {string}  currency  ISO 4217 currency code ("USD", "GBP")
+ * @return {string}
+ */
+export function getLocalizedCurrencyString (amount, currency) {
+	if(!amount) {
+		return null;
+	}
+
+	if(!currency) {
+		return amount;
+	}
+
+	// IE10 safety
+	if(!amount.toLocaleString) {
+		return amount + ' ' + currency;
+	}
+
+	return amount.toLocaleString(undefined, { style: 'currency', currency: currency, maximumSignificantDigits: 10 });
+}
+
 
 /**
  * Initializes the locale environment on the client. Applications should call this in their entry point.
