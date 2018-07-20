@@ -238,15 +238,16 @@ export function removeChangeListener (fn) {
  *
  * @param  {number}  amount    Amount or price value
  * @param  {string}  currency  ISO 4217 currency code ("USD", "GBP")
- * @return {string}
+ * @param  {string}  locale    (Optional) A specified locale
+ * @return {string}            Localized currency string
  */
-export function getLocalizedCurrencyString (amount, currency) {
+export function getLocalizedCurrencyString (amount, currency, locale) {
 	if(!amount) {
 		return null;
 	}
 
 	if(!currency) {
-		return amount;
+		return amount.toString();
 	}
 
 	// IE10 safety
@@ -254,7 +255,7 @@ export function getLocalizedCurrencyString (amount, currency) {
 		return amount + ' ' + currency;
 	}
 
-	return amount.toLocaleString(undefined, { style: 'currency', currency: currency, maximumSignificantDigits: 10 });
+	return amount.toLocaleString(locale, { style: 'currency', currency: currency, maximumSignificantDigits: 10 });
 }
 
 
