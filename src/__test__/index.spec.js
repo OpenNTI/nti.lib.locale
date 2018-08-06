@@ -178,11 +178,68 @@ describe ('Locale Tests', ()=> {
 		});
 	});
 
-	test ('currency localizer', () => {
-		expect(getLocalizedCurrencyString()).toBe(null);
-		expect(getLocalizedCurrencyString(555)).toBe('555');
-		expect(getLocalizedCurrencyString(123, 'USD')).not.toBe(null);
-		expect(getLocalizedCurrencyString(123, 'USD', 'en-us')).toEqual('$123');
-		expect(getLocalizedCurrencyString(1234, 'GBP', 'de-DE')).toEqual('£ 1,234');
+
+	describe ('currency localizer', () => {
+		describe ('no native toLocaleString', () => {
+			let oldToLocaleString;
+
+			beforeEach(() => {
+				oldToLocaleString = Number.prototype.toLocaleString;
+				Number.prototype.toLocaleString = void 0;
+			});
+
+			afterEach(() => {
+				Number.prototype.toLocaleString = oldToLocaleString;
+			});
+
+			test('test default', () => {
+				expect(getLocalizedCurrencyString(742)).toBe('742 USD');
+			});
+
+			test('test currency provided', () => {
+				expect(getLocalizedCurrencyString(742, 'GBP')).toBe('742 GBP');
+			});
+
+		});
+
+		describe ('has native toLocaleString', () => {
+			function createAmount () {
+				const amount = {
+					toLocaleString: () => {}
+				};
+
+				jest.spyOn(amount, 'toLocaleString');
+
+				return amount;
+			}
+
+			function makeParamObject (currency = 'USD') {
+				return { style: 'currency', currency: currency, maximumSignificantDigits: 10 };
+			}
+
+			test('default currency', () => {
+				const amount = createAmount();
+
+				getLocalizedCurrencyString(amount);
+
+				expect(amount.toLocaleString).toHaveBeenCalledWith(undefined, makeParamObject());
+			});
+
+			test('provided currency', () => {
+				const amount = createAmount();
+
+				getLocalizedCurrencyString(amount, 'GBP');
+
+				expect(amount.toLocaleString).toHaveBeenCalledWith(undefined, makeParamObject('GBP'));
+			});
+
+			test('provided currency and locale', () => {
+				const amount = createAmount();
+
+				getLocalizedCurrencyString(amount, 'GBP', 'de-DE');
+
+				expect(amount.toLocaleString).toHaveBeenCalledWith('de-DE', makeParamObject('GBP'));
+			});
+		});
 	});
 });
