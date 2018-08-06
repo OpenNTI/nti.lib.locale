@@ -241,7 +241,7 @@ export function removeChangeListener (fn) {
  * @param  {string}  locale    (Optional) A specified locale
  * @return {string}            Localized currency string
  */
-export function getLocalizedCurrencyString (amount, currency, locale) {
+export function getLocalizedCurrencyString (amount, currency = 'USD', locale) {
 	if(!amount) {
 		return null;
 	}
