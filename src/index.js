@@ -18,6 +18,8 @@
  */
 import counterpart from 'counterpart';
 
+import findLocaleKeys from './find-locale-keys';
+
 const isMissingValue = (str) => /^missing/i.test(str);
 const isSimpleObject = o => o && (p => p === null || p === Object.prototype)(Object.getPrototypeOf(o));
 
@@ -258,6 +260,8 @@ export function getLocalizedCurrencyString (amount, currency = 'USD', locale) {
 	return amount.toLocaleString(locale, { style: 'currency', currency: currency, maximumSignificantDigits: 10 });
 }
 
+global.NTIDevTools = global.NTIDevTools || {};
+global.NTIDevTools.findLocaleKeys = (predicate) => findLocaleKeys(counterpart._registry.translations, predicate);
 
 /**
  * Initializes the locale environment on the client. Applications should call this in their entry point.
@@ -268,6 +272,7 @@ export function init () {
 	const locale = getLocale();
 
 	global.__getLocalData = () => counterpart._registry;
+
 
 	//This assumes browser context... site/lang specific strings will not work on node (for server side renders) this way.
 	return fetch(`/site-assets/shared/strings.${locale}.json`)
