@@ -1,4 +1,4 @@
-/* global $AppConfig, fetch */
+/* global $AppConfig */
 /**
  * Usage:
  * ```js
