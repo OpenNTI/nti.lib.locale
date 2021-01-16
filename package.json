@@ -32,7 +32,6 @@
     "esm": "^3.2.25"
   },
   "devDependencies": {
-    "@nti/lib-scripts": "^2.0.0",
-    "babel-preset-stage-2": "^6.1.0"
+    "@nti/lib-scripts": "^2.0.0"
   }
 }
