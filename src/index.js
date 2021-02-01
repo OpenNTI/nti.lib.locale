@@ -57,12 +57,10 @@ function gen (path, value) {
 	return o;
 }
 
-
-
 /**
  * Get the current locale.
  *
- * @return {string} The locale id
+ * @returns {string} The locale id
  */
 export function getLocale () {
 	return (typeof $AppConfig !== 'undefined' && $AppConfig.locale)
@@ -77,7 +75,7 @@ export function getLocale () {
  *
  * @param  {string} locale The locale id
  * @param  {Object} data   An object with locale strings.
- * @return {void}
+ * @returns {void}
  */
 export function registerTranslations (locale, data) {
 	counterpart.registerTranslations(locale, data);
@@ -86,7 +84,7 @@ export function registerTranslations (locale, data) {
 
 
 /**
- * The default translate function. `getString()` Will return a string given a key.  If the string has interpoation
+ * The default translate function. `getString()` Will return a string given a key.  If the string has interpolation
  * expressions, the options object must have keys that correspond.
  *
  * @function
@@ -95,7 +93,7 @@ export function registerTranslations (locale, data) {
  * @param  {Object} [options]          Optional object with data to be interpolated into the string and a place to store
  *                                     the fallback string.
  * @param  {string} [options.fallback] A fallback string if there is no string for the given key.
- * @return {string}                    the string for the given key
+ * @returns {string}                    the string for the given key
  */
 export default function translate (key, options) {
 	return counterpart(key, options);
@@ -103,6 +101,7 @@ export default function translate (key, options) {
 
 translate.isMissing = isMissing;
 translate.override = (t2) => override(translate, t2);
+translate.scoped = scoped;
 
 
 /**
@@ -110,7 +109,7 @@ translate.override = (t2) => override(translate, t2);
  *
  * @param  {Function} t1 the scoped fn to be overridden
  * @param  {Function} t2 the scoped fn to override with
- * @return {Function}    fn to get a string
+ * @returns {Function}    fn to get a string
  */
 export function override (t1, t2) {
 	const overrideTranslate = (key, options = {}) => {
@@ -141,7 +140,7 @@ export function override (t1, t2) {
  * Tests whether the key is present or not. (present is defined as having a value)
  *
  * @param  {string}  key The key to test
- * @return {boolean}     Returns the true if the key is missing.
+ * @returns {boolean}     Returns the true if the key is missing.
  */
 export function isMissing (key) {
 	try {
@@ -165,7 +164,7 @@ export function isMissing (key) {
  * 	`nti-content.editor.block-types.course-figure.Editor` or `course.contact-info.link0`
  *
  *
- * When we define other languages to fillin the text (instead of the defaults) we will have a large json file with keys:
+ * When we define other languages to fill-in the text (instead of the defaults) we will have a large json file with keys:
  * ```js
  * {
  *     "webapp": {...},
@@ -182,7 +181,7 @@ export function isMissing (key) {
  * ```
  * @param  {Object} defaults  An object with default values for keys. The will only be used
  *                            if there is no key in the selected locale.
- * @return {function}         a translate function scoped to the given path. The function also has two inner functions
+ * @returns {function}         a translate function scoped to the given path. The function also has two inner functions
  * attached to it: `fn.isMissing(key) -> boolean` and `fn.override(withFn) -> fn`
  */
 export function scoped (scope, defaults) {
@@ -228,7 +227,7 @@ export function addChangeListener (fn) {
  * Removes a callback from the change listeners.
  *
  * @param  {Function} fn A callback
- * @return {void}
+ * @returns {void}
  */
 export function removeChangeListener (fn) {
 	counterpart.offLocaleChange(fn);
@@ -241,7 +240,7 @@ export function removeChangeListener (fn) {
  * @param  {number}  amount    Amount or price value
  * @param  {string}  currency  ISO 4217 currency code ("USD", "GBP")
  * @param  {string}  locale    (Optional) A specified locale
- * @return {string}            Localized currency string
+ * @returns {string}            Localized currency string
  */
 export function getLocalizedCurrencyString (amount, currency = 'USD', locale) {
 	if(!amount) {
@@ -266,7 +265,7 @@ global.NTIDevTools.findLocaleKeys = (predicate) => findLocaleKeys(counterpart._r
 /**
  * Initializes the locale environment on the client. Applications should call this in their entry point.
  *
- * @return {void}
+ * @returns {void}
  */
 export function init () {
 	const locale = getLocale();
