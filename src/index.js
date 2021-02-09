@@ -272,9 +272,15 @@ export function init () {
 
 	global.__getLocalData = () => counterpart._registry;
 
+	const now = new Date();
+	const date = [
+		now.getFullYear(),
+		now.getMonth(),
+		now.getDate(),
+	].map(n => `${n}`.padStart(2, '0')).join('');
 
 	//This assumes browser context... site/lang specific strings will not work on node (for server side renders) this way.
-	return fetch(`/site-assets/shared/strings.${locale}.json`)
+	return fetch(`/site-assets/shared/strings.${locale}.json?r=${date}`)
 		.then(res => res.ok
 			? res.json()
 			: Promise.reject(res.status === 404 ? null : res.statusText)
