@@ -1,9 +1,8 @@
 const BLACK_LIST = {
-	'counterpart': true
+	counterpart: true,
 };
 
-
-function matches (value, predicate) {
+function matches(value, predicate) {
 	if (Array.isArray(predicate)) {
 		return predicate.some(p => matches(value, p));
 	}
@@ -23,14 +22,16 @@ function matches (value, predicate) {
 	return false;
 }
 
-function filter (obj, predicate) {
+function filter(obj, predicate) {
 	const keys = Object.keys(obj);
 	const filtered = {};
 
 	for (let key of keys) {
-		let value =  obj[key];
+		let value = obj[key];
 
-		if (BLACK_LIST[key]) { continue; }
+		if (BLACK_LIST[key]) {
+			continue;
+		}
 
 		if (typeof value !== 'string') {
 			value = filter(value, predicate);
@@ -45,6 +46,6 @@ function filter (obj, predicate) {
 	return Object.keys(filtered).length === 0 ? null : filtered;
 }
 
-export default function findLocaleKeys (registry, predicate) {
+export default function findLocaleKeys(registry, predicate) {
 	return filter(registry, predicate);
 }
