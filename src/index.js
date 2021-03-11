@@ -274,12 +274,19 @@ export function init() {
 		.join('');
 
 	//This assumes browser context... site/lang specific strings will not work on node (for server side renders) this way.
-	return fetch(`/site-assets/shared/strings.${locale}.json?r=${date}`)
-		.then(res =>
-			res.ok
-				? res.json()
-				: Promise.reject(res.status === 404 ? null : res.statusText)
-		)
-		.then(translation => registerTranslations(locale, translation))
-		.catch(er => er && console.error(er.stack || er.message || er)); //eslint-disable-line
+	return (
+		fetch(`/site-assets/shared/strings.${locale}.json?r=${date}`)
+			.then(res =>
+				res.ok
+					? res.json()
+					: Promise.reject(
+							res.status === 404
+								? null
+								: new Error(res.statusText)
+					  )
+			)
+			.then(translation => registerTranslations(locale, translation))
+			//eslint-disable-next-line no-console
+			.catch(er => er && console.error(er.stack || er.message || er))
+	);
 }
