@@ -14,6 +14,7 @@
  * const link1 = getStringScoped('link1');
  * ```
  * The signature of getString is the same as that of [counterpart]{@link https://www.npmjs.com/package/counterpart}'s translate function.
+ *
  * @module @nti/lib-locale
  */
 import counterpart from 'counterpart';
@@ -150,6 +151,7 @@ export function isMissing(key) {
 
 /**
  * Return a scoped translate function.
+ *
  * @param  {string} scope     The key prefix. Should be a JSON dotted path.
  *
  * eg:
@@ -176,7 +178,7 @@ export function isMissing(key) {
  * ```
  * @param  {Object} defaults  An object with default values for keys. The will only be used
  *                            if there is no key in the selected locale.
- * @returns {function}         a translate function scoped to the given path. The function also has two inner functions
+ * @returns {Function}         a translate function scoped to the given path. The function also has two inner functions
  * attached to it: `fn.isMissing(key) -> boolean` and `fn.override(withFn) -> fn`
  */
 export function scoped(scope, defaults) {
@@ -202,6 +204,7 @@ export function scoped(scope, defaults) {
 		}
 	}
 
+	scopedTranslate.scope = scope;
 	return scopedTranslate;
 }
 
