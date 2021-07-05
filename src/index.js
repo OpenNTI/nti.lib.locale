@@ -195,6 +195,8 @@ export function scoped(scope, defaults) {
 
 	scopedTranslate.isMissing = key => isMissing(scope + '.' + key);
 	scopedTranslate.override = t2 => override(scopedTranslate, t2);
+	scopedTranslate.scoped = scope2 =>
+		scoped([scope, scope2].join('.'), defaults);
 
 	if (typeof defaults === 'object') {
 		for (let [key, value] of Object.entries(flatten(defaults, scope))) {
