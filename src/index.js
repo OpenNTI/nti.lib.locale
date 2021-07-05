@@ -84,10 +84,20 @@ export function registerTranslations(locale, data) {
 }
 
 /**
+ * A translation function that returns a string for a given key/scope pair.
+ *
+ * @typedef {Object} ITranslate
+ * @property {(string) => boolean} isMissing A utility function that determines if the requested key/scope is present in the current locale
+ * @property {(string) => Translator} override A utility to replace the current translation function with another and fallback to defaults if the overridden function does not have a translation.
+ * @property {(string) => Translator} scoped  Returns a new translator at the new (deeper) scope.
+ */
+/** @typedef {ITranslate & (key: string, options: any) => string} Translator */
+
+/**
  * The default translate function. `getString()` Will return a string given a key.  If the string has interpolation
  * expressions, the options object must have keys that correspond.
  *
- * @function
+ * @type {Translator}
  * @name translate
  * @param  {string} key                String key-path.
  * @param  {Object} [options]          Optional object with data to be interpolated into the string and a place to store
@@ -106,9 +116,9 @@ translate.scoped = scoped;
 /**
  * Given two scoped fns if it doesn't exist in t2, check t1.
  *
- * @param  {Function} t1 the scoped fn to be overridden
- * @param  {Function} t2 the scoped fn to override with
- * @returns {Function}    fn to get a string
+ * @param  {Translator} t1 the scoped fn to be overridden
+ * @param  {Translator} t2 the scoped fn to override with
+ * @returns {Translator}    fn to get a string
  */
 export function override(t1, t2) {
 	const overrideTranslate = (key, options = {}) => {
@@ -162,24 +172,23 @@ export function isMissing(key) {
  *
  *
  * When we define other languages to fill-in the text (instead of the defaults) we will have a large json file with keys:
+ *
  * ```js
- * {
- *     "webapp": {...},
- *     "mobile": {...},
- *     "nti-web-commons: { ... },
- *     "nti-content": {
- *         "block-types": {
- *             "course-figure": {
- *                 "Editor": { "figureTitle": "Figure %(index)s", ... }
- *             }
- *         }
- *     }
- * }
+ * 	{
+ * 	    "webapp": {...},
+ * 	    "mobile": {...},
+ * 	    "nti-web-commons: { ... },
+ * 	    "nti-content": {
+ * 	        "block-types": {
+ * 	            "course-figure": {
+ * 	                "Editor": { "figureTitle": "Figure %(index)s", ... }
+ * 	            }
+ * 	        }
+ * 	    }
+ * 	}
  * ```
- * @param  {Object} defaults  An object with default values for keys. The will only be used
- *                            if there is no key in the selected locale.
- * @returns {Function}         a translate function scoped to the given path. The function also has two inner functions
- * attached to it: `fn.isMissing(key) -> boolean` and `fn.override(withFn) -> fn`
+ * @param  {Object=} defaults An object with default values for keys. The will only be used if there is no key in the selected locale.
+ * @returns {Translator} a translate function scoped to the given path. The function also has two inner functions attached to it: `fn.isMissing(key) -> boolean` and `fn.override(withFn) -> fn`
  */
 export function scoped(scope, defaults) {
 	if (!scope || scope.indexOf('.') < 0) {
@@ -187,6 +196,7 @@ export function scoped(scope, defaults) {
 		console.error('"%s" is a bad locale scope ("key" path prefix).', scope);
 	}
 
+	/** @type {Translator} (scopedTranslate) */
 	const scopedTranslate = (key, options = {}) =>
 		counterpart(key, {
 			...options,
