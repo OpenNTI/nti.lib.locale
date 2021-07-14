@@ -204,7 +204,8 @@ export function scoped(scope, defaults) {
 		});
 
 	scopedTranslate.isMissing = key => isMissing(scope + '.' + key);
-	scopedTranslate.override = t2 => override(scopedTranslate, t2);
+	scopedTranslate.override = t2 =>
+		t2 ? override(scopedTranslate, t2) : scopedTranslate;
 	scopedTranslate.scoped = scope2 =>
 		scoped([scope, scope2].join('.'), defaults);
 
