@@ -198,7 +198,7 @@ export function scoped(scope, defaults) {
 
 	/** @type {Translator} (scopedTranslate) */
 	const scopedTranslate = (key, options = {}) =>
-		counterpart(key, {
+		translate(key, {
 			...options,
 			scope,
 		});
