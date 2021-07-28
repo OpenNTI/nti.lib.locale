@@ -270,7 +270,21 @@ export function getLocalizedCurrencyString(amount, currency = 'USD', locale) {
 	});
 }
 
+/**
+ * Querying the locale data for existing scopes/keys
+ *
+ * @param {string} scope dot separated key path.
+ * @returns {any?}
+ */
+export function getAvailableTranslations(scope) {
+	const { locale, translations } = counterpart._registry;
+	const root = translations[locale];
+	const [bin, key] = traverse(scope, root);
+	return bin?.[key];
+}
+
 global.NTIDevTools = global.NTIDevTools || {};
+global.NTIDevTools.getAvailableTranslations = getAvailableTranslations;
 global.NTIDevTools.findLocaleKeys = predicate =>
 	findLocaleKeys(counterpart._registry.translations, predicate);
 
