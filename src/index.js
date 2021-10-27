@@ -83,6 +83,10 @@ export function registerTranslations(locale, data) {
 	counterpart.emit('localechange', locale, locale);
 }
 
+export function interpolate(str, data) {
+	return counterpart._interpolate(str, data);
+}
+
 /**
  * A translation function that returns a string for a given key/scope pair.
  *
